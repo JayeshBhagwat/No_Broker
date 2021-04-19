@@ -1,0 +1,59 @@
+<app-appnav></app-appnav>
+<div class="container">
+  <br><br>
+  <div class="row">
+    <div class="col">
+        <div class="card text-white bg-secondary mb-3">
+            <div class="card-body">
+              <p class="card-text d-flex justify-content-around">
+                  <i class="fas fa-5x fa-box"></i> <span class="statsNum">{{records.length}}</span>
+              </p>
+            </div>
+          </div>
+    </div>
+    <div class="col">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+              <p class="card-text d-flex justify-content-around">
+                  <i class="fas fa-5x fa-money-bill-alt"></i> <span class="statsNum">{{totalEarnings(records) | currency}}</span>
+              </p>
+            </div>
+          </div>
+    </div>
+    <div class="col">
+
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+              <p class="card-text d-flex justify-content-around">
+                  <i class="fas fa-5x fa-sticky-note"></i> <span class="statsNum">{{totalItems(records)}}</span>
+              </p>
+            </div>
+          </div>
+    </div>
+  </div>
+  <div class="card mt-2" *ngFor="let record of records">
+    <div class="card-body p-0 pl-3">
+      <div class="row">
+        <div class="col d-flex flex-column justify-content-center">
+          <h5 class="card-title">Address</h5>
+          <p class="card-text">
+            Name: {{record.firstName}} {{record.lastName}}<br />
+            Address: {{record.addressOne}}<br />
+            Address: {{record.addressTwo}} <br />
+            {{record.country}}, {{record.state}}, {{record.zip}}<br />
+          </p>
+        </div>
+        <div class="col">
+            <h5 class="card-title">Record Items</h5>
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let item of record.items">{{item.name}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer text-muted text-right"><b>
+        Record Id: {{record._id}} <br>
+        <!-- Total: {{recordTotal(record.items) | currency}} -->
+    </b></div>
+  </div>
+</div>

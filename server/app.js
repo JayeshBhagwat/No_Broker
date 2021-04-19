@@ -1,0 +1,120 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path");
+const app = express();
+const mongoose = require("mongoose");
+const config = require('./config');
+const authenticate = require('./authenticate');
+
+const User = require('./models/user');
+const Location = require('./models/location');
+const Record = require('./models/record');
+
+mongoose.Promise = global.Promise;
+mongoose.connect(
+  config.mongoURL,
+  { useNewUrlParser: true }
+);
+
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../dist')))
+
+app.post('/register', (req, res) => {
+  const newUser = new User({
+    name: req.body.fullName,
+    email: req.body.email,
+  })
+  newUser.password = newUser.generateHash(req.body.password);
+  newUser.save().then(rec => {
+    res.status(201).json(rec)
+  })
+})
+
+app.post('/login', (req, res) => {
+  User.findOne({email: req.body.email}).then(loginUser => {
+    if(!loginUser) {
+      return res.status(401).json({message: 'Invalid username or password'})
+    }
+    if(!loginUser.validatePassword(req.body.password)) {
+      return res.status(401).json({message: 'Invalid username or password'})
+    }
+    const withTokem = {email: loginUser.email, _id: loginUser._id};
+    withTokem.token = loginUser.generateJWT();
+    res.status(200).json(withTokem)
+  })
+})
+
+app.get('/users', authenticate, (req, res) => {
+  User.find().then(rec => {
+    res.status(200).json(rec)
+  })
+})
+
+
+app.get('/seeddb', (req, res) => {
+  const data = [
+    {
+      _id: "5c1671285d7250149bef37a0",
+      name: "Kundan Westros",
+      description:
+        "This location is in Baner",
+      image: "/assets/one.jpg",
+      price: 199,
+      __v: 0
+    }
+  ];
+  data.forEach((location) => {
+    const newLocation = new Location({
+      name: location.name,
+      description: location.description,
+      image: location.image,
+      price: location.price,
+    });
+    newLocation.save();
+  })  
+  res.send("ok")
+})
+
+app.get('/api/locations', (req, res) => {
+  Location.find().then(rec => {
+    if(rec) {
+      res.status(200).json(rec);
+    } else {
+      res.status(200).json([]);
+    }
+  })
+})
+app.post('/api/checkout', (req, res) => {
+  const newRecord = new Record({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    addressOne: req.body.addressOne,
+    addressTwo: req.body.addressTwo,
+    country: req.body.country,
+    state: req.body.state,
+    zip: req.body.zip,
+    items: req.body.items.map(item => item._id) || []
+  })
+  newRecord.save().then(rec => {
+    res.status(200).json(rec)
+  }, (err) => {
+    res.status(500).json({error: 'error'})
+  });
+})
+app.get('/api/records', (req, res) => {
+  Record.find()
+  .populate('items')
+  .exec()
+  .then(rec => {
+    res.status(200).json(rec);
+  })
+  .catch(err => {
+    res.status(500).json(err);
+  })
+})
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'))
+});
+
+app.listen(3000, () => console.log("Listening on port 3000..."));
