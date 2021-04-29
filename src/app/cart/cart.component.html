@@ -10,7 +10,7 @@
       </h4>
       <ul class="list-group mb-3">
         <li class="list-group-item d-flex justify-content-between">
-          <span>Total (USD)</span> <strong>{{cartTotal | currency}}</strong>
+          <span>Total (INR)</span> <strong>{{cartTotal | currency:'INR'}}</strong>
         </li>
       </ul>
       <button class="btn btn-primary btn-block"routerLink="/checkout">Checkout</button>
@@ -23,7 +23,7 @@
             <small class="text-muted">{{item.description}}</small>
           </div>
           <div class="d-flex align-items-center">
-            <h4 class="my-0">{{item.price | currency}}</h4>
+            <h4 class="my-0">{{item.price | currency:'INR'}}</h4>
           </div>
           <div class="d-flex align-items-center">
             <button class="btn" (click)="removeItemFromCart(item)"><i class="far fa-times-circle"></i></button>

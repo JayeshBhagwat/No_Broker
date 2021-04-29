@@ -2,7 +2,7 @@
 <section class="jumbotron text-center">
   <div class="container">
     <h1 class="jumbotron-heading">Find A  Flat Without Broker</h1>
-    <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+    <!-- <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p> -->
     <!-- <p>
       <a href="" class="btn btn-primary my-2">Get Started</a>
     </p> -->
@@ -24,7 +24,7 @@
                 <h4 class="card-text">{{item.name}}</h4>
                 <p class="card-text">{{item.description | truncate: [140, '...']}}</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="card-text">{{item.price | currency}}</h2>
+                    <h2 class="card-text">{{item.price | currency:'INR'}}</h2>
                     <button type="button" class="btn" (click)="addItemToCart(item)" [class.btn-outline-primary]="itemInCart(item).length">
                         <i class="fas fa-shopping-cart"></i>
                     </button>

@@ -50,31 +50,6 @@ app.get('/users', authenticate, (req, res) => {
   })
 })
 
-
-app.get('/seeddb', (req, res) => {
-  const data = [
-    {
-      _id: "5c1671285d7250149bef37a0",
-      name: "Kundan Westros",
-      description:
-        "This location is in Baner",
-      image: "/assets/one.jpg",
-      price: 199,
-      __v: 0
-    }
-  ];
-  data.forEach((location) => {
-    const newLocation = new Location({
-      name: location.name,
-      description: location.description,
-      image: location.image,
-      price: location.price,
-    });
-    newLocation.save();
-  })  
-  res.send("ok")
-})
-
 app.get('/api/locations', (req, res) => {
   Location.find().then(rec => {
     if(rec) {
